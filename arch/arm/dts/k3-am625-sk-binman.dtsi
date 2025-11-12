@@ -280,6 +280,43 @@
 
 		fit {
 			images {
+				atf {
+					ti-secure {
+
+						auth-in-place = <0xa02>;
+
+						firewall-1-0 {
+							/* sdram */
+							insert-template = <&firewall_bg_3>;
+							id = <1>;
+							region = <0>;
+						};
+
+						firewall-1-1 {
+							/* sdram */
+							insert-template = <&firewall_armv8_atf_fg>;
+							id = <1>;
+							region = <1>;
+							start_address = <0x0 0x80000000>;
+							end_address = <0x0 0x8001ffff>;
+						};
+
+					};
+				};
+
+				tee {
+					ti-secure {
+
+						auth-in-place = <0xa02>;
+
+						firewall-1-2 {
+							/* sdram */
+							insert-template = <&firewall_armv8_optee_fg>;
+							id = <1>;
+							region = <2>;
+						};
+					};
+				};
 
 				tifsstub-hs {
 					description = "TIFSSTUB";

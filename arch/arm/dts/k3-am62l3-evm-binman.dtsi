@@ -9,6 +9,11 @@
 	};
 };
 
+/*
+ * Include firewall configuration templates for use in tispl.bin
+ */
+#include "k3-binman-firewall.dtsi"
+
 &binman {
 	custMpk {
 		filename = "custMpk.pem";
@@ -116,6 +121,41 @@
 		};
 
 		atf: atf-bl31 {
+			ti-secure {
+				auth-in-place = <0xa02>;
+
+				firewall-0-0 {
+					/* Background firewall for SDRAM */
+					insert-template = <&firewall_bg_3>;
+					id = <0>;
+					region = <0>;
+				};
+
+				firewall-0-1 {
+					/* Foreground firewall for ATF region */
+					insert-template = <&firewall_armv8_atf_fg>;
+					id = <0>;
+					region = <1>;
+					start_address = <0x0 0x80000000>;
+					end_address = <0x0 0x8001ffff>;
+				};
+
+				firewall-1-0 {
+					/* Background firewall for SDRAM */
+					insert-template = <&firewall_bg_3>;
+					id = <1>;
+					region = <0>;
+				};
+
+				firewall-1-1 {
+					/* Foreground firewall for ATF region */
+					insert-template = <&firewall_armv8_atf_fg>;
+					id = <1>;
+					region = <1>;
+					start_address = <0x0 0x80000000>;
+					end_address = <0x0 0x8001ffff>;
+				};
+			};
 		};
 
 		tifs_enc2: tifs-enc2.bin {
@@ -134,6 +174,27 @@
 		};
 
 		tee: tee-os {
+			ti-secure {
+				auth-in-place = <0xa02>;
+
+				firewall-0-2 {
+					/* Foreground firewall for OP-TEE region */
+					insert-template = <&firewall_armv8_optee_fg>;
+					id = <0>;
+					region = <2>;
+					start_address = <0x0 0x80200000>;
+					end_address = <0x0 0x819fffff>;
+				};
+
+				firewall-1-2 {
+					/* Foreground firewall for OP-TEE region */
+					insert-template = <&firewall_armv8_optee_fg>;
+					id = <1>;
+					region = <2>;
+					start_address = <0x0 0x80200000>;
+					end_address = <0x0 0x819fffff>;
+				};
+			};
 		};
 
 		spl: u-boot-spl {
